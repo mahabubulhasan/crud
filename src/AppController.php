@@ -25,12 +25,20 @@ abstract class AppController extends Controller
      * AppController constructor.
      * @param Repository $repo
      * @param $controllerName (example: Home)
+     * @example
+     * <code>
+     * parent::__construct($repo, 'User'); //view: user
+     * or
+     * parent::__construct($repo, 'User\Setting'); //view: user.setting
+     * or
+     * parent::__construct($repo, 'User\AdminUser'); //view: user.admin-user
+     * </code>
      */
     public function __construct(Repository $repo, $controllerName)
     {
         $this->_repository = $repo;
         $this->_controllerName = $controllerName;
-        $this->_viewPath = strtolower($controllerName);
+        $this->_viewPath = str_replace('\-','.', kebab_case($controllerName));
     }
 
     public function index(){
@@ -61,9 +69,10 @@ abstract class AppController extends Controller
     }
 
     public function update($id, Request $req){
-        $this->_repository->validator($req, true)->validate();
-        $this->_repository->update($id, $req);
-        return redirect($req->path())->with('msg', $this->_controllerName.' updated successfully!');;
+        $this->_repository->validator($req->all(), true)->validate();
+        $this->_repository->update($req->all(), $id);
+        return redirect(str_replace('/'.$id, '', $req->path()))
+            ->with('msg', $this->_controllerName.' updated successfully!');
     }
 
     public function activate($id, $state){
@@ -73,7 +82,7 @@ abstract class AppController extends Controller
     }
 
     public function destroy($id){
-        $this->_repository->destroy($id);
+        $this->_repository->delete($id);
         return redirect()->back()->with('msg', $this->_controllerName.' deleted successfully!');;
     }
 }
