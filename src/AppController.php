@@ -19,6 +19,7 @@ abstract class AppController extends Controller
      */
     protected $_repository;
     protected $_viewPath;
+    protected $_redirect=true;
     private $_controllerName;
 
     /**
@@ -57,9 +58,14 @@ abstract class AppController extends Controller
      * @return array
      */
     public function store(Request $req){
-        $this->_repository->validator($req->all())->validate();
-        $this->_repository->insert($req->all());
-        return redirect($req->path())->with('msg', $this->_controllerName.' created successfully!');;
+        $this->_repository->validator($req)->validate();
+        $resp = $this->_repository->insert($req);
+
+        if($this->_redirect) {
+            return redirect($req->path())->with('msg', $this->_controllerName . ' created successfully!');;
+        }else{
+            return $resp;
+        }
     }
 
     public function edit($id){
@@ -69,20 +75,31 @@ abstract class AppController extends Controller
     }
 
     public function update($id, Request $req){
-        $this->_repository->validator($req->all(), true)->validate();
-        $this->_repository->update($req->all(), $id);
-        return redirect(str_replace('/'.$id, '', $req->path()))
-            ->with('msg', $this->_controllerName.' updated successfully!');
+        $this->_repository->validator($req, true)->validate();
+        $resp = $this->_repository->update($req, $id);
+        if($this->_redirect) {
+            return redirect(str_replace('/' . $id, '', $req->path()))
+                ->with('msg', $this->_controllerName . ' updated successfully!');
+        }else{
+            return $resp;
+        }
     }
 
     public function activate($id, $state){
-        $this->_repository->activate($id, $state);
-        return redirect()->back()->with('msg', $this->_controllerName.' '.$state.' successfully!');;
-
+        $resp = $this->_repository->activate($id, $state);
+        if($this->_redirect) {
+            return redirect()->back()->with('msg', $this->_controllerName . ' ' . $state . ' successfully!');
+        }else{
+            return $resp;
+        }
     }
 
     public function destroy($id){
-        $this->_repository->delete($id);
-        return redirect()->back()->with('msg', $this->_controllerName.' deleted successfully!');;
+        $resp = $this->_repository->delete($id);
+        if($this->_redirect) {
+            return redirect()->back()->with('msg', $this->_controllerName . ' deleted successfully!');
+        }else{
+            return $resp;
+        }
     }
 }

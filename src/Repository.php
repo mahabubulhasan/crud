@@ -12,6 +12,7 @@ use Illuminate\Contracts\Validation\Validator;
 use Illuminate\Database\Eloquent\Builder;
 use Illuminate\Database\Eloquent\Collection;
 use Illuminate\Database\Eloquent\Model;
+use Illuminate\Http\Request;
 
 interface Repository
 {
@@ -26,11 +27,11 @@ interface Repository
     function setConfig(array $config);
 
     /**
-     * @param array $data
+     * @param Request|array $data
      * @param bool $isUpdate
      * @return Validator
      */
-    function validator(array $data, $isUpdate=false);
+    function validator($data, $isUpdate=false);
 
     /**
      * @return Collection
@@ -69,17 +70,17 @@ interface Repository
     function asOptions($sel='');
 
     /**
-     * @param array $data
+     * @param Request|array $data
      * @return mixed
      */
-    function insert(array $data);
+    function insert($data);
 
     /**
-     * @param array $data
+     * @param Request|array $data
      * @param $id
      * @return mixed
      */
-    function update(array $data, $id);
+    function update($data, $id);
 
     /**
      * @param $id

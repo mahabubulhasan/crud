@@ -7,7 +7,6 @@
 
 namespace Uzzal\Crud;
 
-
 use Illuminate\Database\Eloquent\Builder;
 use Illuminate\Database\Eloquent\Model;
 use Validator;
@@ -58,22 +57,31 @@ class AbstractRepository implements Repository
     }
 
     /**
-     * @param array $data
+     * @param array|\Illuminate\Http\Request $data
      * @param bool $isUpdate
-     * @return \Illuminate\Contracts\Validation\Validator
+     * @return mixed
      */
-    public function validator(array $data, $isUpdate = false)
+    public function validator($data, $isUpdate = false)
     {
+        if(!is_array($data)){
+            $data = $data->all();
+        }
         if($isUpdate){
             return Validator::make($data, $this->_update_validation_rules);
         }
         return Validator::make($data, $this->_validation_rules);
     }
 
+    /**
+     * @param array $rules
+     */
     protected function _setValidationRule(array $rules){
         $this->_validation_rules = $rules;
     }
 
+    /**
+     * @param array $rules
+     */
     protected function _setUpdateValidationRule(array $rules){
         $this->_update_validation_rules = $rules;
     }
@@ -91,16 +99,26 @@ class AbstractRepository implements Repository
         return $this->_model->get();
     }
 
+    /**
+     * @param $id
+     * @return \Illuminate\Database\Eloquent\Collection|Model|null|static|static[]
+     */
     public function getRow($id)
     {
         return $this->_model->find($id);
     }
 
+    /**
+     * @return Builder|Model
+     */
     public function getModel()
     {
         return $this->_model;
     }
 
+    /**
+     * @return $this
+     */
     public function getRows()
     {
         $this->_rows = $this->getModel();
@@ -137,13 +155,28 @@ class AbstractRepository implements Repository
         return $opt;
     }
 
-    public function insert(array $data)
+    /**
+     * @param array|\Illuminate\Http\Request $data
+     * @return $this|Model
+     */
+    public function insert($data)
     {
+        if(!is_array($data)){
+            $data = $data->all();
+        }
         return $this->_model->create($data);
     }
 
-    public function update(array $data, $id)
+    /**
+     * @param array|\Illuminate\Http\Request $data
+     * @param $id
+     * @return bool|int
+     */
+    public function update($data, $id)
     {
+        if(!is_array($data)){
+            $data = $data->all();
+        }
         return $this->_model->find($id)->update($data);
     }
 
