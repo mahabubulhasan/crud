@@ -31,6 +31,18 @@ trait Enum
     public static function keys(){
         return array_keys(self::asArray());
     }
+	
+	/**
+     * Returns the key based on the value
+     * @param $value
+     * @return mixed
+     */
+    public static function key($value){
+        if(!self::$_keys){
+            self::$_keys = array_flip(self::asArray());
+        }
+        return self::$_keys[$value];
+    }
 
     /**
      *
