@@ -11,6 +11,7 @@ namespace Uzzal\Crud;
 trait Enum
 {
     protected static $_values;
+    protected static $_keys;
 
     /**
      *
