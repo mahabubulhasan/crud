@@ -75,7 +75,7 @@ abstract class AppController extends Controller
     }
 
     public function update($id, Request $req){
-        $this->_repository->validator($req, $id, true)->validate();
+        $this->_repository->validator($req, true, $id)->validate();
         $resp = $this->_repository->update($req, $id);
         if($this->_redirect) {
             return redirect(str_replace('/' . $id, '', $req->path()))

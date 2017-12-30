@@ -32,7 +32,7 @@ interface Repository
      * @param bool $isUpdate
      * @return Validator
      */
-    function validator($data, $except='', $isUpdate=false);
+    function validator($data, $isUpdate=false, $except='');
 
     /**
      * @return Collection

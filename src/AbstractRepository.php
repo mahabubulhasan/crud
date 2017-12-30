@@ -59,9 +59,10 @@ class AbstractRepository implements Repository
     /**
      * @param array|\Illuminate\Http\Request $data
      * @param bool $isUpdate
+     * @param $except
      * @return mixed
      */
-    public function validator($data, $except='', $isUpdate = false)
+    public function validator($data, $isUpdate = false, $except='')
     {
         if(!is_array($data)){
             $data = $data->all();
