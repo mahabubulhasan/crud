@@ -45,7 +45,7 @@ abstract class AppController extends Controller
     public function index(){
         return view($this->_viewPath.
             '.index',[
-            'rows'=>$this->_repository->getAllRows()
+            'rows'=>$this->_repository->getModel()->paginate(30)
         ]);
     }
 
@@ -75,7 +75,7 @@ abstract class AppController extends Controller
     }
 
     public function update($id, Request $req){
-        $this->_repository->validator($req, true)->validate();
+        $this->_repository->validator($req, $id, true)->validate();
         $resp = $this->_repository->update($req, $id);
         if($this->_redirect) {
             return redirect(str_replace('/' . $id, '', $req->path()))

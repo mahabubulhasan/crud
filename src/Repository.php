@@ -28,10 +28,11 @@ interface Repository
 
     /**
      * @param Request|array $data
+     * @param $except
      * @param bool $isUpdate
      * @return Validator
      */
-    function validator($data, $isUpdate=false);
+    function validator($data, $except='', $isUpdate=false);
 
     /**
      * @return Collection
