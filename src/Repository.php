@@ -27,10 +27,14 @@ interface Repository
     function setConfig(array $config);
 
     /**
-     * @param Request|array $data
-     * @param $except
+     * @param $data
      * @param bool $isUpdate
-     * @return Validator
+     * @param string $except
+     * @return mixed
+     * @example
+     * <code>
+     * $rule['email'] = 'required|email|unique:users,email,'.$except.',user_id';
+     * </code>
      */
     function validator($data, $isUpdate=false, $except='');
 

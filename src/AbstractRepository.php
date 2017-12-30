@@ -9,6 +9,7 @@ namespace Uzzal\Crud;
 
 use Illuminate\Database\Eloquent\Builder;
 use Illuminate\Database\Eloquent\Model;
+use Illuminate\Http\Request;
 use Validator;
 
 class AbstractRepository implements Repository
@@ -57,14 +58,14 @@ class AbstractRepository implements Repository
     }
 
     /**
-     * @param array|\Illuminate\Http\Request $data
+     * @param $data
      * @param bool $isUpdate
-     * @param $except
+     * @param string $except
      * @return mixed
      */
     public function validator($data, $isUpdate = false, $except='')
     {
-        if(!is_array($data)){
+        if($data instanceof Request){
             $data = $data->all();
         }
         if($isUpdate){
@@ -162,7 +163,7 @@ class AbstractRepository implements Repository
      */
     public function insert($data)
     {
-        if(!is_array($data)){
+        if($data instanceof Request){
             $data = $data->all();
         }
         return $this->_model->create($data);
@@ -175,7 +176,7 @@ class AbstractRepository implements Repository
      */
     public function update($data, $id)
     {
-        if(!is_array($data)){
+        if($data instanceof Request){
             $data = $data->all();
         }
         return $this->_model->find($id)->update($data);
