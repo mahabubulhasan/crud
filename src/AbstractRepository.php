@@ -28,6 +28,7 @@ class AbstractRepository implements Repository
 
     private $_validation_rules=[];
     private $_update_validation_rules = [];
+    private $_is_update_rule_set = false;
 
     protected $_config=[
         self::OPTION_VALUE => 'name',
@@ -68,7 +69,7 @@ class AbstractRepository implements Repository
         if($data instanceof Request){
             $data = $data->all();
         }
-        if($isUpdate){
+        if($isUpdate && $this->_is_update_rule_set){
             return Validator::make($data, $this->_update_validation_rules);
         }
         return Validator::make($data, $this->_validation_rules);
@@ -85,6 +86,7 @@ class AbstractRepository implements Repository
      * @param array $rules
      */
     protected function _setUpdateValidationRule(array $rules){
+        $this->_is_update_rule_set = true;
         $this->_update_validation_rules = $rules;
     }
 
